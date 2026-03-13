@@ -91,36 +91,55 @@ std::ostream& operator<<(std::ostream& out, const Connection& c) {
 
 // STUDENT TODO: IMPLEMENT
 void Graph::updateNode(int id, NodeInfo n) {
-    if (/* id is out of bounds — check if id is a valid index into nodes */ true) {
+    if (id<0||id>=(int)nodes.size()) {
         cout << "Attempting to update node with id: " << id << " but node does not exist" << endl;
         return;
     }
-
+    if(nodes.at(id) == nullptr) {
+        nodes.at(id) = new NodeInfo(n);
+    } else {
+        *nodes.at(id) = n;
+    }
     return; //stub
 }
 
 // STUDENT TODO: IMPLEMENT
 NodeInfo* Graph::getNode(int id) const {
-    return nullptr; //stub
+    return nodes.at(id);
 }
 
 // STUDENT TODO: IMPLEMENT
 void Graph::updateConnection(int v, int u, double w) {
-    if (/* v is out of bounds — check if v is a valid index into nodes */ true) {
+    if(v<0||v>=(int)nodes.size()) {
         cerr << "Attempting to update connection between " << v << " and " << u << " with weight " << w << " but " << v << " does not exist" << endl;
         exit(1);
     }
-    if (/* u is out of bounds — check if u is a valid index into nodes */ true) {
+    if(u<0||u>=(int)nodes.size()) {
         cerr << "Attempting to update connection between " << v << " and " << u << " with weight " << w << " but " << u << " does not exist" << endl;
         exit(1);
     }
 
-    return; //stub
+    auto& adj = adjacencyList.at(v);
+    auto it = adj.find(u);
+    if(it != adj.end()) {
+        
+        it->second.weight = w;
+    }else {
+        Connection c(v, u, w);
+        adj[u] = c;
+    }
 }
 
 // STUDENT TODO: IMPLEMENT
 void Graph::clear() {
-    return; //stub
+    for(auto nodePtr : nodes) {
+        if (nodePtr != nullptr) {
+            delete nodePtr;
+        }
+    }
+    nodes.clear();
+    adjacencyList.clear();
+    size = 0;
 }
 
 
